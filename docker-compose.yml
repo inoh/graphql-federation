@@ -1,0 +1,26 @@
+version: '3'
+services:
+  users:
+    build: .
+    volumes:
+      - ./api/users:/usr/src/app
+  products:
+    build: .
+    volumes:
+      - ./api/products:/usr/src/app
+  reviews:
+    build: .
+    volumes:
+      - ./api/reviews:/usr/src/app
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./api/gateway:/usr/src/app
+    depends_on:
+      - users
+      - products
+      - reviews

@@ -1,0 +1,9 @@
+FROM node:16-alpine
+
+WORKDIR /usr/src/app
+
+COPY ./api/gateway/package.json ./api/gateway/yarn.lock ./
+
+RUN yarn install
+
+CMD [ "yarn", "start" ]

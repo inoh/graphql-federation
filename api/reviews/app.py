@@ -1,4 +1,5 @@
 import typing
+import uuid
 import strawberry
 
 
@@ -79,4 +80,31 @@ class Product:
 class Query:
     _service: typing.Optional[str]
 
-schema = strawberry.federation.Schema(query=Query, types=[Review, User, Product])
+@strawberry.type
+class Mutation:
+    @strawberry.mutation
+    def add_review(
+        self,
+        body: str,
+        author_id: strawberry.ID,
+        product_id: strawberry.ID,
+    ) -> Review:
+        review = Review(
+            id=str(uuid.uuid4()),
+            body=body,
+            author=User(id=author_id),
+            product=Product(id=product_id),
+        )
+        reviews.append({
+            "id": review.id,
+            "body": review.body,
+            "author_id": review.author.id,
+            "product_id": review.product.id,
+        })
+        return review
+
+schema = strawberry.federation.Schema(
+    query=Query,
+    mutation=Mutation,
+    types=[Review, User, Product],
+)
